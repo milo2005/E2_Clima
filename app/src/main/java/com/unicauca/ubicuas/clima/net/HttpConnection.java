@@ -25,6 +25,8 @@ public class HttpConnection {
         con.setReadTimeout(10000);
         con.setConnectTimeout(15000);
         con.setRequestMethod("GET");
+        con.setDoInput(true);
+
         con.connect();
 
         int code =  con.getResponseCode();
@@ -38,23 +40,27 @@ public class HttpConnection {
     /**
      * Metodo para Ejecutar el Metodo POST
      * @param url
-     * @param data
+     * @param json
      * @return
      */
 
-    public void requestByPostText(String url, String data) throws IOException {
+    public String requestByPostJson(String url, String json) throws IOException {
         URL urlC = new URL(url);
         HttpURLConnection conn = (HttpURLConnection) urlC.openConnection();
 
         conn.setReadTimeout(10000);
         conn.setConnectTimeout(15000);
         conn.setRequestMethod("POST");
-        conn.addRequestProperty("Content-Type", "text/plain");
+        conn.addRequestProperty("Content-Type", "application/json");
         conn.setDoOutput(true);
+        conn.setDoInput(true);
         conn.connect();
 
         OutputStream stream = conn.getOutputStream();
-        stream.write(data.getBytes());
+        stream.write(json.getBytes());
+
+        InputStream iS = conn.getInputStream();
+        return streamToSting(iS);
 
     }
 
@@ -64,7 +70,7 @@ public class HttpConnection {
      * @param data Los datos deben ir en el formato etiqueta1=valor1&etiqueta2=valor2.....
      * @throws IOException
      */
-    public void requestByPostForm(String url, String data) throws IOException {
+    public String requestByPostForm(String url, String data) throws IOException {
         URL urlC = new URL(url);
         HttpURLConnection conn = (HttpURLConnection) urlC.openConnection();
 
@@ -73,10 +79,14 @@ public class HttpConnection {
         conn.setRequestMethod("POST");
         conn.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         conn.setDoOutput(true);
+        conn.setDoInput(true);
         conn.connect();
 
         OutputStream stream = conn.getOutputStream();
         stream.write(data.getBytes());
+
+        InputStream sI = conn.getInputStream();
+        return streamToSting(sI);
 
     }
 
