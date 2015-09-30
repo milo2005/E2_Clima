@@ -1,5 +1,6 @@
 package com.unicauca.ubicuas.clima.net;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,8 +29,6 @@ public class HttpConnection {
         con.setDoInput(true);
 
         con.connect();
-
-        int code =  con.getResponseCode();
 
         InputStream iS= con.getInputStream();
 
@@ -93,11 +92,17 @@ public class HttpConnection {
     private String streamToSting(InputStream iS) throws IOException {
         InputStreamReader reader = new InputStreamReader(iS);
         int ch=0;
-        StringBuffer buffer= new StringBuffer();
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
         while((ch = reader.read()) != -1){
-            buffer.append(ch);
+            out.write(ch);
         }
-        return buffer.toString();
+
+        String rta = new String(out.toByteArray());
+        out.close();
+
+        return rta;
     }
 
 

@@ -1,6 +1,7 @@
 package com.unicauca.ubicuas.clima.net;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -10,7 +11,7 @@ import java.io.IOException;
 public class HttpAsyncTask extends AsyncTask<String,Integer, String> {
 
     public interface HttpInterface{
-        void setResponse(String Response);
+        void setResponse(String response);
     }
 
     public static int POST=0;
@@ -28,16 +29,17 @@ public class HttpAsyncTask extends AsyncTask<String,Integer, String> {
 
     @Override
     protected String doInBackground(String... params) {
+        Log.i("Clima", params[0]);
         String response = "";
         try {
             if (method == GET)
                 response = conn.requestByGet(params[0]);
             else {
-                conn.requestByPostForm(params[0], params[1]);
-                response = "OK";
+
+                response = conn.requestByPostForm(params[0], params[1]);;
             }
         }catch(IOException e){
-            response="FAIL";
+            response=null;
         }
         return response;
     }
